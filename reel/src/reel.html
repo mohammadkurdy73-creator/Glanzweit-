@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Reel</title>
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-sans-arabic/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-sans-arabic/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-sans-arabic/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-sans-arabic/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ma-shan-zheng/400.css">
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="node_modules/gsap/dist/MotionPathPlugin.min.js"></script>
+<style>
+  :root{
+    --deep:#081a5a; --navy:#0b1f66; --navy2:#14318c; --blue:#2f6fdb; --blue2:#3d7ce6;
+    --sky:#e8f0fd; --ink:#0e2370; --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+  body{font-family:'IBM Plex Sans Arabic',sans-serif;-webkit-font-smoothing:antialiased}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  .out,.cam{position:absolute;inset:0}
+  .light{background:#fff;color:var(--ink)}
+  .s1{background:radial-gradient(120% 80% at 80% 20%,#4282ec 0%,var(--blue) 45%,#2560c8 100%);color:#fff}
+  .s3{background:radial-gradient(110% 70% at 50% 30%,#10267a 0%,var(--deep) 70%);color:#fff}
+  .s5{background:radial-gradient(110% 70% at 70% 20%,#1b3a9c 0%,var(--navy2) 55%,#0f2a7d 100%);color:#fff}
+  .s7{background:radial-gradient(120% 80% at 30% 20%,#4282ec 0%,var(--blue) 45%,#2560c8 100%);color:#fff}
+  .s8{background:radial-gradient(90% 55% at 50% 48%,#12309a 0%,var(--deep) 75%);color:#fff}
+
+  /* header */
+  .hdr{position:absolute;top:200px;left:110px;right:110px;height:120px;display:flex;flex-direction:row-reverse;align-items:center;gap:28px}
+  .hdr .line{flex:1;height:3px;position:relative;border-radius:2px;transform-origin:right center}
+  .dark .hdr .line{background:rgba(255,255,255,.28)}
+  .light .hdr .line{background:rgba(14,35,112,.14)}
+  .hdr .line i{position:absolute;right:0;top:0;bottom:0;width:0;border-radius:2px}
+  .dark .hdr .line i{background:#fff}
+  .light .hdr .line i{background:var(--blue)}
+
+  .logo{position:relative;width:118px;height:118px;flex:none;border-radius:50%;display:grid;place-items:center}
+  .logo svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+  .logo circle{fill:none;stroke-width:4.5;stroke-linecap:round}
+  .logo span{font-family:'Ma Shan Zheng',serif;font-size:76px;line-height:1;margin-top:4px}
+  .dark .logo circle{stroke:#fff}.dark .logo span{color:#fff}
+  .light .logo{background:#fff}.light .logo circle{stroke:var(--ink)}.light .logo span{color:var(--ink)}
+
+  .content{position:absolute;top:350px;bottom:400px;left:110px;right:110px;display:flex;flex-direction:column;justify-content:center}
+  .w{display:inline-block;will-change:transform,opacity,filter}
+  .hl{display:inline-block;position:relative;padding:0 16px;color:#fff;z-index:0}
+  .hl::before{content:"";position:absolute;inset:6px 0 2px;border-radius:12px;background:var(--navy);z-index:-1;transform:scaleX(var(--s,0));transform-origin:right center}
+
+  /* decor */
+  .ring{position:absolute;border-radius:50%;border:2px solid rgba(255,255,255,.18)}
+  .light .ring{border-color:rgba(47,111,219,.14)}
+  .blob{position:absolute;border-radius:50%;background:var(--sky)}
+  .dot{position:absolute;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.35)}
+  .light .dot{background:rgba(47,111,219,.25)}
+
+  /* S1 */
+  .cal{position:relative;width:860px;height:430px;border-radius:44px;background:#fff;box-shadow:0 22px 0 #1f55b8,0 40px 80px rgba(5,20,80,.35);overflow:visible}
+  .cal .top{height:110px;background:var(--navy2);border-radius:44px 44px 0 0;position:relative}
+  .cal .top .bar1{position:absolute;left:108px;top:44px;width:206px;height:20px;border-radius:10px;background:#fff}
+  .cal .top .bar2{position:absolute;left:108px;top:78px;width:150px;height:12px;border-radius:6px;background:rgba(255,255,255,.45)}
+  .cal .pin{position:absolute;top:-28px;width:26px;height:74px;border-radius:13px;background:var(--navy);border:5px solid #fff}
+  .cal .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;padding:34px 44px}
+  .cell{height:118px;border-radius:24px;background:var(--sky);display:grid;place-items:center}
+  .cell svg{width:74px;height:74px}
+  .cell path{stroke:var(--blue);stroke-width:7;stroke-linecap:round;fill:none}
+  .t1{margin-top:110px;font-size:88px;font-weight:700;line-height:1.55}
+
+  /* S2 */
+  .t2a{font-size:62px;font-weight:700;line-height:1.5;color:var(--ink)}
+  .num{color:var(--blue);direction:ltr;unicode-bidi:isolate;display:inline-block;font-variant-numeric:tabular-nums}
+  .icons{display:flex;gap:30px;margin:70px 0 70px}
+  .ic{width:166px;height:166px;border-radius:50%;display:grid;place-items:center;color:#fff}
+  .ic svg{width:78px;height:78px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .ic.b{background:var(--blue)}.ic.n{background:var(--navy2)}
+  .t2b{font-size:56px;font-weight:500;line-height:1.75;color:var(--ink)}
+  .pill{display:inline-block;direction:ltr;unicode-bidi:isolate;background:var(--blue);color:#fff;font-weight:700;border-radius:14px;padding:0 22px;margin-top:10px;font-size:66px;line-height:1.45;font-variant-numeric:tabular-nums}
+
+  /* S3 */
+  .mtn{width:860px;height:560px;overflow:visible}
+  .t3{font-size:124px;font-weight:700;line-height:1.3;margin-top:40px;text-align:center}
+
+  /* S4 */
+  .t4{font-size:74px;font-weight:700;color:var(--ink);line-height:1.45;margin-bottom:70px}
+  .card{display:flex;align-items:center;gap:40px;border-radius:40px;padding:52px 50px;color:#fff;margin-bottom:40px}
+  .card.b{background:var(--blue)}.card.n{background:var(--navy2)}
+  .card .ci{width:140px;height:140px;border-radius:50%;background:#fff;flex:none;display:grid;place-items:center}
+  .card .ci svg{width:66px;height:66px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .card.b .ci svg{stroke:var(--blue)}.card.n .ci svg{stroke:var(--navy2)}
+  .card p{font-size:54px;font-weight:600;line-height:1.6}
+
+  /* S5 */
+  .row{display:flex;align-items:center;gap:44px;padding:52px 0;position:relative}
+  .row .sq{width:150px;height:150px;border-radius:30px;background:var(--blue);display:grid;place-items:center;flex:none}
+  .row .sq svg{width:72px;height:72px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .row p{font-size:51px;font-weight:600;line-height:1.4}
+  .row .div{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.22);transform-origin:right center}
+
+  /* S6 */
+  .t6a{display:flex;align-items:center;gap:36px;font-size:66px;font-weight:600;color:var(--ink)}
+  .hg{width:130px;height:130px;border-radius:50%;background:var(--sky);display:grid;place-items:center;flex:none}
+  .hg svg{width:64px;height:64px;fill:none;stroke:var(--navy2);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .bars{width:860px;height:440px;margin:60px 0 50px;overflow:visible}
+  .t6b{font-size:76px;font-weight:700;color:var(--ink);line-height:1.6}
+  .t6b .c{color:var(--blue)}
+
+  /* S7 */
+  .sprout{width:860px;height:470px;overflow:visible}
+  .t7a{font-size:56px;font-weight:500;line-height:1.5;margin-top:50px}
+  .box7{margin-top:50px;background:var(--navy);border-radius:40px;padding:56px 60px;font-size:72px;font-weight:700;line-height:1.6}
+
+  /* S8 */
+  .center{position:absolute;left:50%;top:50%}
+  .bigrings .ring{border-color:rgba(120,160,255,.28)}
+  .biglogo{width:300px;height:300px}
+  .biglogo circle{stroke-width:3.2!important}
+  .biglogo span{font-size:200px;margin-top:10px}
+  .t8{position:absolute;left:0;right:0;top:1150px;text-align:center;font-size:118px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ============ SCENE 1 ============ -->
+  <section class="scene s1 dark" id="s1"><div class="out"><div class="cam">
+    <div class="ring" style="width:1300px;height:1300px;left:-760px;top:1160px"></div>
+    <div class="ring" style="width:700px;height:700px;right:-300px;top:-260px"></div>
+    <div class="dot" style="left:160px;top:430px"></div><div class="dot" style="left:920px;top:1450px"></div><div class="dot" style="left:600px;top:1580px;width:14px;height:14px"></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="content">
+      <div class="cal">
+        <div class="pin" style="right:150px"></div><div class="pin" style="left:150px"></div>
+        <div class="top"><div class="bar1"></div><div class="bar2"></div></div>
+        <div class="grid">
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+          <div class="cell"><svg viewBox="0 0 40 40"><path d="M9 9 31 31"/><path d="M31 9 9 31"/></svg></div>
+        </div>
+      </div>
+      <div class="t1 split">مررت بفترة استمرت <span class="hl">ثمانية</span> <span class="hl">أشهر</span> لم أُغلق خلالها أي صفقة.</div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ SCENE 2 ============ -->
+  <section class="scene light" id="s2"><div class="out"><div class="cam">
+    <div class="blob" style="width:520px;height:520px;left:-260px;top:-180px;opacity:.7"></div>
+    <div class="ring" style="width:900px;height:900px;right:-520px;bottom:-200px"></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="content">
+      <div class="t2a"><span class="split">في بعض الأشهر لم يكن دخلي يتجاوز</span><br>
+        <span class="w nw"><span class="num" id="n1000">1,000</span></span> <span class="w nw">أو</span> <span class="w nw"><span class="num" id="n1500">1,500</span></span> <span class="w nw">درهم،</span></div>
+      <div class="icons">
+        <div class="ic b"><svg viewBox="0 0 24 24"><circle cx="12" cy="15.5" r="5.5"/><path d="M12 10 9.6 6.8 12 3.6l2.4 3.2Z"/></svg></div>
+        <div class="ic n"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></div>
+        <div class="ic b"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v12h14V9"/><path d="M10 21v-6h4v6"/></svg></div>
+        <div class="ic n"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="17" height="15" rx="3"/><path d="M20 10h-4.5a2.5 2.5 0 0 0 0 5H20"/><path d="M16 12.5h.01"/></svg></div>
+      </div>
+      <div class="t2b"><span class="split">بينما كنت أتزوج، وأسافر، وأؤسس بيتي، وأتحمل مصاريف وصلت خلال تلك الفترة إلى نحو</span><br><span class="pill" id="pill"><span id="n15k">15,000</span>$</span></div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ SCENE 3 ============ -->
+  <section class="scene s3 dark" id="s3"><div class="out"><div class="cam">
+    <div class="ring" style="width:1200px;height:1200px;left:-60px;top:240px;border-color:rgba(255,255,255,.06)"></div>
+    <div class="dot" style="left:180px;top:420px;width:6px;height:6px"></div><div class="dot" style="left:820px;top:520px;width:5px;height:5px"></div><div class="dot" style="left:300px;top:640px;width:4px;height:4px"></div><div class="dot" style="left:950px;top:380px;width:7px;height:7px"></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="content" style="align-items:center">
+      <svg class="mtn" viewBox="0 0 860 560">
+        <defs>
+          <mask id="pathMask"><path id="mpath" d="M200 540 C 270 470, 330 450, 360 410 S 450 340, 420 300 S 470 230, 495 195 S 515 165, 528 140" fill="none" stroke="#fff" stroke-width="14"/></mask>
+        </defs>
+        <g id="cloud" opacity=".9">
+          <g fill="#2a428f"><circle cx="150" cy="120" r="56"/><circle cx="210" cy="96" r="70"/><circle cx="270" cy="128" r="48"/><rect x="96" y="120" width="226" height="56" rx="28"/></g>
+          <g id="rain" stroke="#3d7ce6" stroke-width="7" stroke-linecap="round">
+            <line class="drop" x1="140" y1="200" x2="130" y2="228"/><line class="drop" x1="185" y1="200" x2="175" y2="228"/><line class="drop" x1="230" y1="200" x2="220" y2="228"/><line class="drop" x1="275" y1="200" x2="265" y2="228"/>
+            <line class="drop" x1="160" y1="250" x2="150" y2="278"/><line class="drop" x1="210" y1="250" x2="200" y2="278"/><line class="drop" x1="255" y1="250" x2="245" y2="278"/>
+          </g>
+        </g>
+        <g id="mtns">
+          <polygon points="560,540 760,250 860,360 860,540" fill="#1c3fa0"/>
+          <polygon points="20,540 230,360 330,430 530,130 860,540" fill="#2f6fdb"/>
+          <polygon points="490,180 530,130 570,180 552,170 530,190 510,170" fill="#fff"/>
+          <line x1="530" y1="132" x2="530" y2="40" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+          <polygon id="flag" points="533,42 596,60 533,80" fill="#fff"/>
+          <path d="M200 540 C 270 470, 330 450, 360 410 S 450 340, 420 300 S 470 230, 495 195 S 515 165, 528 140" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-dasharray="2 14" stroke-linecap="round" mask="url(#pathMask)"/>
+          <g id="climber" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none">
+            <circle cx="0" cy="-58" r="11" fill="#fff" stroke="none"/>
+            <path d="M0 -46 L-4 -18"/><path d="M-4 -18 L8 -2"/><path d="M-4 -18 L-16 -2"/><path d="M-2 -38 L14 -30"/><path d="M-2 -38 L-14 -44"/>
+          </g>
+        </g>
+      </svg>
+      <div class="t3 split">كانت فترة صعبة جداً.</div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ SCENE 4 ============ -->
+  <section class="scene light" id="s4"><div class="out"><div class="cam">
+    <div class="blob" id="s4blob" style="width:760px;height:760px;left:-420px;top:-200px"></div>
+    <div class="ring" style="width:700px;height:700px;right:-380px;bottom:-140px"></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="content">
+      <div class="t4 split">لكن الذي جعلني أستمر كان أمرين:</div>
+      <div class="card b" id="c1">
+        <div class="ci"><svg viewBox="0 0 24 24"><path d="M3 19h4v-4h4v-4h4V7h4"/><path d="m14 3 5 0 0 5"/><path d="m19 3-6 6"/></svg></div>
+        <p class="split">أنني كنت أسعى وأفعل ما أستطيع.</p>
+      </div>
+      <div class="card n" id="c2">
+        <div class="ci"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></div>
+        <p class="split">وأنني كنت مؤمناً بأن رزقي مكتوب، وأن دوري هو الأخذ بالأسباب.</p>
+      </div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ SCENE 5 ============ -->
+  <section class="scene s5 dark" id="s5"><div class="out"><div class="cam">
+    <div class="ring" style="width:1100px;height:1100px;left:-700px;top:-300px;border-color:rgba(255,255,255,.08)"></div>
+    <div class="ring" style="width:800px;height:800px;right:-520px;bottom:120px;border-color:rgba(255,255,255,.08)"></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="content">
+      <div class="row"><div class="sq"><svg viewBox="0 0 24 24" class="mega"><path d="m3 11 13-5v12L3 13z"/><path d="M8.5 14.5 9.5 19a1.5 1.5 0 0 0 2.9-.7l-.9-3.3"/><path class="wave" d="M19 9.5a3.5 3.5 0 0 1 0 5"/><path class="wave" d="M21.2 7.5a6.5 6.5 0 0 1 0 9"/></svg></div><p class="split">أطلقت حملات،</p><div class="div"></div></div>
+      <div class="row"><div class="sq"><svg viewBox="0 0 24 24"><path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg></div><p class="split">وحاولت الوصول إلى عملاء جدد،</p><div class="div"></div></div>
+      <div class="row"><div class="sq"><svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M7 19.5a5 5 0 0 1 10 0"/><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v5h-5"/></svg></div><p class="split">وعدت إلى العملاء السابقين،</p><div class="div"></div></div>
+      <div class="row"><div class="sq"><svg viewBox="0 0 24 24" class="gear"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></div><p class="split">وطوّرت ما أستطيع تطويره.</p></div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ SCENE 6 ============ -->
+  <section class="scene light" id="s6"><div class="out"><div class="cam">
+    <div class="ring" style="width:900px;height:900px;left:-560px;bottom:-300px"></div>
+    <div class="blob" style="width:380px;height:380px;right:-200px;top:520px;opacity:.6"></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="content">
+      <div class="t6a"><div class="hg"><svg viewBox="0 0 24 24" id="hgl"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div><span class="split">لم تظهر النتيجة بسرعة.</span></div>
+      <svg class="bars" viewBox="0 0 860 440" id="bars">
+        <line id="base" x1="0" y1="420" x2="860" y2="420" stroke="#c9d3e8" stroke-width="3"/>
+        <g id="arches" fill="none" stroke="#b9c4dc" stroke-width="3"></g>
+        <rect id="barL" x="352" y="160" width="50" height="262" rx="25" fill="#2f6fdb"/>
+        <rect id="barN" x="290" y="96" width="50" height="326" rx="25" fill="#14318c"/>
+        <g id="chk"><circle cx="315" cy="36" r="38" fill="#2f6fdb"/><path d="M298 37 l12 12 22-24" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g fill="#2f6fdb" id="sparks">
+          <path class="spk" d="M240 70 l6 18 18 6 -18 6 -6 18 -6 -18 -18 -6 18 -6z"/>
+          <path class="spk" d="M410 92 l4 13 13 4 -13 4 -4 13 -4 -13 -13 -4 13 -4z" fill="#6b8fd6"/>
+          <path class="spk" d="M220 150 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3z" fill="#8aa3d8"/>
+        </g>
+      </svg>
+      <div class="t6b split">لكن بعد ثمانية أشهر، جاءت <span class="c">صفقتان</span> <span class="c">جيدتان</span> وبدأ الوضع يتغير.</div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ SCENE 7 ============ -->
+  <section class="scene s7 dark" id="s7"><div class="out"><div class="cam">
+    <div class="ring" style="width:900px;height:900px;left:-560px;top:-200px"></div>
+    <div class="ring" style="width:600px;height:600px;right:-340px;bottom:300px;border-color:rgba(255,255,255,.1)"></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="content">
+      <svg class="sprout" viewBox="0 0 860 470">
+        <rect id="soil" x="0" y="230" width="860" height="200" rx="34" fill="#0b1f66" stroke="#5b8fe8" stroke-opacity=".5" stroke-width="3"/>
+        <g fill="#2f4fa8" id="pebbles"><circle cx="140" cy="300" r="12"/><circle cx="240" cy="280" r="7"/><circle cx="660" cy="285" r="8"/><circle cx="730" cy="350" r="13"/><circle cx="560" cy="390" r="6"/></g>
+        <g id="roots" fill="none" stroke="#3d7ce6" stroke-width="5" stroke-linecap="round">
+          <path d="M430 232 C 430 300, 420 350, 400 420"/>
+          <path d="M430 240 C 445 300, 470 360, 480 420"/>
+          <path d="M430 250 C 380 300, 290 330, 250 410"/>
+          <path d="M432 250 C 490 300, 590 330, 640 410"/>
+          <path d="M430 260 C 400 320, 360 370, 330 420"/>
+          <path d="M432 260 C 470 320, 520 370, 560 420"/>
+          <path d="M330 320 C 300 330, 280 345, 270 360"/>
+          <path d="M560 330 C 600 335, 620 350, 630 365"/>
+        </g>
+        <g id="plant">
+          <path id="stem" d="M430 232 L430 120" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+          <path id="leafL" d="M428 128 C 400 130, 370 110, 360 70 C 395 70, 425 90, 428 128 Z" fill="#fff"/>
+          <path id="leafR" d="M432 112 C 440 70, 480 40, 530 40 C 525 85, 480 115, 432 112 Z" fill="#fff"/>
+        </g>
+      </svg>
+      <div class="t7a split">الاستمرار لا يعني انتظار الفرج من دون عمل.</div>
+      <div class="box7" id="box7"><span class="split">يعني أن تعمل حتى عندما لا تملك أي دليل على أن النتيجة قريبة.</span></div>
+    </div>
+  </div></div></section>
+
+  <!-- ============ SCENE 8 ============ -->
+  <section class="scene s8 dark" id="s8"><div class="out"><div class="cam">
+    <div class="center bigrings">
+      <div class="ring r8" style="width:1500px;height:1500px;left:-750px;top:-750px"></div>
+      <div class="ring r8" style="width:1100px;height:1100px;left:-550px;top:-550px"></div>
+      <div class="ring r8" style="width:760px;height:760px;left:-380px;top:-380px;border-color:rgba(90,140,255,.55)"></div>
+    </div>
+    <div class="hdr" style="justify-content:center"><div class="line" style="flex:none;width:860px" id="l8"></div></div>
+    <div class="center" style="margin-top:-120px"><div class="logo biglogo" id="biglogo" style="left:-150px;top:-150px;position:absolute">
+      <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" id="bigc" stroke-dasharray="260 29"/></svg><span>永</span>
+    </div></div>
+    <div class="t8 split">وبس هيك... سلام</div>
+  </div></div></section>
+
+</div>
+
+<script>
+gsap.registerPlugin(MotionPathPlugin);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+// wrap each word of .split text nodes in span.w; child elements count as one word
+$$('.split').forEach(el => {
+  [...el.childNodes].forEach(node => {
+    if (node.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      node.textContent.split(/(\s+)/).forEach(p => {
+        if (!p) return;
+        if (/^\s+$/.test(p)) frag.appendChild(document.createTextNode(p));
+        else { const s = document.createElement('span'); s.className = 'w'; s.textContent = p; frag.appendChild(s); }
+      });
+      node.replaceWith(frag);
+    } else if (node.nodeType === 1) node.classList.add('w');
+  });
+});
+
+const T = [0, 5.6, 12.8, 16.9, 23.4, 29.6, 36.3, 42.9];
+const TOTAL = 47.6;
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+const words = (sel, at, stag = 0.07, d = 0.75) =>
+  tl.fromTo($$(sel + ' .w'), { y: 46, opacity: 0, filter: 'blur(12px)' },
+    { y: 0, opacity: 1, filter: 'blur(0px)', duration: d, stagger: stag }, at);
+const header = (sc, at) => {
+  tl.fromTo($(`#${sc} .hdr .line`), { scaleX: 0 }, { scaleX: 1, duration: 1, ease: 'power2.inOut' }, at);
+  tl.fromTo($(`#${sc} .hdr .logo`), { scale: 0, rotate: -120 }, { scale: 1, rotate: 0, duration: 0.9, ease: 'back.out(1.8)' }, at + 0.1);
+  tl.fromTo($(`#${sc} .hdr .logo circle`), { strokeDashoffset: 276 }, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.out' }, at + 0.15);
+};
+const counter = (el, to, at, d) => {
+  const o = { v: 0 };
+  tl.to(o, { v: to, duration: d, ease: 'power2.out', onUpdate: () => el.textContent = Math.round(o.v).toLocaleString('en-US') }, at);
+};
+const life = (sc, from, to) => {
+  // slow camera push for the whole time the scene is visible
+  tl.fromTo(`#${sc} .cam`, { scale: 1.0 }, { scale: 1.035, duration: to - from, ease: 'none' }, from);
+  $$(`#${sc} .ring:not(.r8)`).forEach((r, i) =>
+    tl.fromTo(r, { scale: 0.9, rotate: 0 }, { scale: 1.05, rotate: i % 2 ? 8 : -8, duration: to - from, ease: 'none' }, from));
+  $$(`#${sc} .dot`).forEach((d, i) =>
+    tl.fromTo(d, { y: 0, opacity: 0 }, { y: -90 - i * 30, opacity: 1, duration: to - from, ease: 'sine.inOut' }, from));
+};
+
+// ---- transitions: two-layer wipe (accent panel + scene) ----
+const scenes = $$('.scene');
+scenes.forEach((s, i) => s.style.zIndex = i + 1);
+const wipeColors = ['#2f6fdb', '#ffffff', '#14318c', '#e8f0fd', '#2f6fdb', '#14318c', '#ffffff', '#2f6fdb'];
+scenes.forEach((s, i) => {
+  if (!i) return;
+  const at = T[i] - 0.55;
+  const prev = scenes[i - 1];
+  const panel = document.createElement('div');
+  panel.style.cssText = `position:absolute;inset:0;z-index:${i + 1};background:${wipeColors[i - 1]}`;
+  s.before(panel);
+  s.style.zIndex = i + 1;
+  const kind = i % 3;
+  let from, to;
+  if (kind === 1) { from = 'circle(0% at 87% 14%)'; to = 'circle(150% at 87% 14%)'; }
+  else if (kind === 2) { from = 'inset(100% 0% 0% 0%)'; to = 'inset(0% 0% 0% 0%)'; }
+  else { from = 'inset(0% 0% 0% 100%)'; to = 'inset(0% 0% 0% 0%)'; }
+  tl.fromTo(panel, { clipPath: from }, { clipPath: to, duration: 0.75, ease: 'power3.inOut' }, at);
+  tl.fromTo(s, { clipPath: from }, { clipPath: to, duration: 0.75, ease: 'power3.inOut' }, at + 0.14);
+  tl.to($('.out', prev), { scale: 0.92, opacity: 0.5, duration: 0.8, ease: 'power2.in' }, at - 0.05);
+  tl.set(prev, { visibility: 'hidden' }, at + 0.95);
+  tl.set(panel, { visibility: 'hidden' }, at + 0.95);
+});
+
+// ================= SCENE 1 =================
+life('s1', 0, T[1] + 0.4);
+header('s1', 0.1);
+tl.fromTo('#s1 .cal', { y: 180, opacity: 0, scale: 0.86, rotate: -4 }, { y: 0, opacity: 1, scale: 1, rotate: 0, duration: 1.1, ease: 'back.out(1.4)' }, 0.25);
+tl.fromTo('#s1 .pin', { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'back.out(2)' }, 0.85);
+tl.fromTo('#s1 .top .bar1, #s1 .top .bar2', { scaleX: 0, transformOrigin: 'left center' }, { scaleX: 1, duration: 0.6, stagger: 0.1 }, 0.9);
+tl.fromTo('#s1 .cell', { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, stagger: { each: 0.05, from: 'end' }, ease: 'back.out(2)' }, 0.9);
+$$('#s1 .cell').reverse().forEach((c, i) => {
+  const [a, b] = $$('path', c);
+  const at = 1.35 + i * 0.16;
+  tl.fromTo([a, b], { strokeDasharray: 32, strokeDashoffset: 32 }, { strokeDashoffset: 0, duration: 0.18, stagger: 0.07, ease: 'power1.inOut' }, at);
+  tl.fromTo(c, { scale: 1 }, { keyframes: [{ scale: 0.88, duration: 0.08 }, { scale: 1, duration: 0.25, ease: 'back.out(3)' }] }, at);
+});
+tl.to('#s1 .cal', { y: -14, duration: 1.4, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 2.7);
+words('#s1 .t1', 2.2, 0.08);
+tl.fromTo($$('#s1 .hl'), { '--s': 0 }, { '--s': 1, duration: 0.6, stagger: 0.15, ease: 'power3.inOut' }, 2.6);
+
+// ================= SCENE 2 =================
+life('s2', T[1] - 0.6, T[2] + 0.4);
+header('s2', T[1] + 0.05);
+tl.fromTo('#s2 .blob', { scale: 0 }, { scale: 1, duration: 1.2 }, T[1]);
+words('#s2 .t2a', T[1] + 0.25, 0.07);
+tl.fromTo('#s2 .nw', { y: 46, opacity: 0, filter: 'blur(12px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.12 }, T[1] + 0.9);
+counter($('#n1000'), 1000, T[1] + 0.9, 1.1);
+counter($('#n1500'), 1500, T[1] + 1.1, 1.2);
+tl.fromTo('#s2 .ic', { scale: 0, rotate: -40 }, { scale: 1, rotate: 0, duration: 0.7, stagger: 0.32, ease: 'back.out(2)' }, T[1] + 2.0);
+tl.fromTo('#s2 .ic svg', { scale: 0.3 }, { scale: 1, duration: 0.6, stagger: 0.32, ease: 'back.out(3)' }, T[1] + 2.15);
+words('#s2 .t2b', T[1] + 2.0, 0.085, 0.7);
+tl.fromTo('#pill', { scale: 0, rotate: 8 }, { scale: 1, rotate: 0, duration: 0.8, ease: 'back.out(2)' }, T[1] + 3.6);
+counter($('#n15k'), 15000, T[1] + 3.6, 1.3);
+tl.to('#pill', { keyframes: [{ scale: 1.12, duration: 0.18 }, { scale: 1, duration: 0.45, ease: 'elastic.out(1,0.4)' }] }, T[1] + 4.95);
+tl.to('#s2 .ic', { y: -10, duration: 0.35, stagger: 0.08, yoyo: true, repeat: 1, ease: 'sine.inOut' }, T[1] + 5.2);
+
+// ================= SCENE 3 =================
+life('s3', T[2] - 0.6, T[3] + 0.4);
+header('s3', T[2] + 0.05);
+tl.fromTo('#mtns', { y: 260, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'power4.out' }, T[2] + 0.05);
+tl.fromTo('#cloud', { x: -320, opacity: 0 }, { x: 0, opacity: 0.95, duration: 1.2 }, T[2] + 0.25);
+tl.to('#cloud', { x: 50, duration: 3, ease: 'sine.inOut' }, T[2] + 1.45);
+$$('#rain .drop').forEach((d, i) =>
+  tl.fromTo(d, { y: -10, opacity: 0 }, { y: 70, opacity: 0, keyframes: { opacity: [0, 1, 0] }, duration: 0.55, repeat: 7, ease: 'none' }, T[2] + 0.6 + i * 0.09));
+tl.fromTo('#mpath', { strokeDasharray: 700, strokeDashoffset: 700 }, { strokeDashoffset: 330, duration: 3.2, ease: 'power1.inOut' }, T[2] + 0.6);
+tl.fromTo('#climber', { opacity: 0 }, { opacity: 1, duration: 0.3 }, T[2] + 0.6);
+tl.to('#climber', { motionPath: { path: '#mpath', align: '#mpath', alignOrigin: [0.5, 1], start: 0, end: 0.5 }, duration: 3.2, ease: 'power1.inOut' }, T[2] + 0.6);
+tl.fromTo('#climber', { rotate: -4 }, { rotate: 4, duration: 0.3, repeat: 9, yoyo: true, ease: 'sine.inOut' }, T[2] + 0.6);
+tl.fromTo('#flag', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.6, ease: 'back.out(2)' }, T[2] + 0.9);
+tl.to('#flag', { skewY: 8, scaleX: 0.85, duration: 0.35, yoyo: true, repeat: 7, ease: 'sine.inOut', transformOrigin: '0% 50%' }, T[2] + 1.5);
+words('#s3 .t3', T[2] + 1.1, 0.16, 0.9);
+tl.to('#s3 .t3', { keyframes: [{ x: -10, duration: 0.06 }, { x: 10, duration: 0.06 }, { x: -6, duration: 0.06 }, { x: 0, duration: 0.06 }] }, T[2] + 2.2);
+
+// ================= SCENE 4 =================
+life('s4', T[3] - 0.6, T[4] + 0.4);
+header('s4', T[3] + 0.05);
+tl.fromTo('#s4blob', { scale: 0 }, { scale: 1, duration: 1.4, ease: 'power2.out' }, T[3]);
+words('#s4 .t4', T[3] + 0.25, 0.08);
+tl.fromTo('#c1', { x: 300, opacity: 0, rotate: 3 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: 'power4.out' }, T[3] + 1.1);
+tl.fromTo('#c1 .ci', { scale: 0, rotate: -90 }, { scale: 1, rotate: 0, duration: 0.7, ease: 'back.out(2)' }, T[3] + 1.4);
+words('#c1', T[3] + 1.45, 0.08, 0.6);
+tl.fromTo('#c2', { x: 300, opacity: 0, rotate: 3 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: 'power4.out' }, T[3] + 2.6);
+tl.fromTo('#c2 .ci', { scale: 0, rotate: -90 }, { scale: 1, rotate: 0, duration: 0.7, ease: 'back.out(2)' }, T[3] + 2.9);
+words('#c2', T[3] + 2.95, 0.075, 0.6);
+tl.to('#c1 .ci svg', { y: -6, x: 6, duration: 0.5, yoyo: true, repeat: 3, ease: 'sine.inOut' }, T[3] + 2.2);
+
+// ================= SCENE 5 =================
+life('s5', T[4] - 0.6, T[5] + 0.4);
+header('s5', T[4] + 0.05);
+$$('#s5 .row').forEach((r, i) => {
+  const at = T[4] + 0.3 + i * 1.0;
+  tl.fromTo($('.sq', r), { scale: 0, rotate: 45 }, { scale: 1, rotate: 0, duration: 0.7, ease: 'back.out(1.8)' }, at);
+  tl.fromTo($('.sq svg', r), { scale: 0.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.5)' }, at + 0.15);
+  tl.fromTo($$('.w', r), { x: 60, opacity: 0, filter: 'blur(10px)' }, { x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.07 }, at + 0.15);
+  if ($('.div', r)) tl.fromTo($('.div', r), { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: 'power2.inOut' }, at + 0.35);
+});
+tl.fromTo('#s5 .mega .wave', { opacity: 0.2 }, { opacity: 1, duration: 0.3, stagger: 0.15, repeat: 9, yoyo: true }, T[4] + 0.7);
+tl.fromTo('#s5 .gear', { rotate: 0 }, { rotate: 360, duration: 3.2, ease: 'none', transformOrigin: '50% 50%' }, T[4] + 3.3);
+tl.to('#s5 .sq', { scale: 1.07, duration: 0.25, stagger: 0.12, yoyo: true, repeat: 1, ease: 'sine.inOut' }, T[4] + 4.6);
+
+// ================= SCENE 6 =================
+life('s6', T[5] - 0.6, T[6] + 0.4);
+header('s6', T[5] + 0.05);
+tl.fromTo('#s6 .hg', { scale: 0 }, { scale: 1, duration: 0.7, ease: 'back.out(2)' }, T[5] + 0.2);
+tl.fromTo('#hgl', { rotate: 0 }, { rotate: 180, duration: 0.7, ease: 'power3.inOut', repeat: 2, repeatDelay: 0.6, transformOrigin: '50% 50%' }, T[5] + 0.6);
+words('#s6 .t6a', T[5] + 0.3, 0.08);
+tl.fromTo('#base', { strokeDasharray: 860, strokeDashoffset: -860 }, { strokeDashoffset: 0, duration: 1, ease: 'power2.inOut' }, T[5] + 0.7);
+{
+  const g = $('#arches');
+  for (let i = 0; i < 8; i++) {
+    const x = 790 - i * 56, h = 110;
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', `M${x} 420 V${420 - h + 25} A25 25 0 0 1 ${x + 50} ${420 - h + 25} V420`);
+    g.appendChild(p);
+    tl.fromTo(p, { strokeDasharray: 260, strokeDashoffset: 260, opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.45, ease: 'power2.out' }, T[5] + 1.0 + i * 0.2);
+  }
+}
+tl.fromTo('#barL', { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.8, ease: 'back.out(1.6)' }, T[5] + 2.7);
+tl.fromTo('#barN', { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.9, ease: 'back.out(1.6)' }, T[5] + 2.95);
+tl.fromTo('#chk', { scale: 0, transformOrigin: '315px 36px' }, { scale: 1, duration: 0.6, ease: 'back.out(3)' }, T[5] + 3.5);
+tl.fromTo('#sparks .spk', { scale: 0, rotate: -90, transformOrigin: '50% 50%' }, { scale: 1, rotate: 0, duration: 0.5, stagger: 0.12, ease: 'back.out(3)' }, T[5] + 3.6);
+tl.to('#sparks .spk', { scale: 0.6, duration: 0.4, stagger: 0.1, yoyo: true, repeat: 3, ease: 'sine.inOut' }, T[5] + 4.3);
+words('#s6 .t6b', T[5] + 3.4, 0.08);
+tl.fromTo('#s6 .t6b .c', { color: '#0e2370' }, { color: '#2f6fdb', duration: 0.5, stagger: 0.1 }, T[5] + 4.2);
+
+// ================= SCENE 7 =================
+life('s7', T[6] - 0.6, T[7] + 0.4);
+header('s7', T[6] + 0.05);
+tl.fromTo('#soil', { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'power4.out' }, T[6] + 0.1);
+tl.fromTo('#pebbles circle', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.4, stagger: 0.07, ease: 'back.out(3)' }, T[6] + 0.6);
+tl.fromTo('#roots path', { strokeDasharray: 300, strokeDashoffset: 300 }, { strokeDashoffset: 0, duration: 1.3, stagger: 0.08, ease: 'power2.out' }, T[6] + 0.6);
+tl.fromTo('#stem', { strokeDasharray: 120, strokeDashoffset: 120 }, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.out' }, T[6] + 1.0);
+tl.fromTo('#leafL', { scale: 0, transformOrigin: '100% 100%' }, { scale: 1, duration: 0.8, ease: 'back.out(2)' }, T[6] + 1.6);
+tl.fromTo('#leafR', { scale: 0, transformOrigin: '0% 100%' }, { scale: 1, duration: 0.8, ease: 'back.out(2)' }, T[6] + 1.75);
+tl.to('#plant', { rotate: 3, duration: 0.9, yoyo: true, repeat: 3, ease: 'sine.inOut', transformOrigin: '430px 232px' }, T[6] + 2.4);
+words('#s7 .t7a', T[6] + 1.3, 0.07);
+tl.fromTo('#box7', { y: 120, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: 'power4.out' }, T[6] + 2.5);
+words('#box7', T[6] + 2.8, 0.075, 0.6);
+
+// ================= SCENE 8 =================
+tl.fromTo('#s8 .r8', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.6, stagger: 0.12, ease: 'expo.out' }, T[7] - 0.2);
+$$('#s8 .r8').forEach((r, i) => tl.to(r, { scale: 1.06, duration: 1.2, yoyo: true, repeat: 2, ease: 'sine.inOut' }, T[7] + 1.4 + i * 0.15));
+tl.fromTo('#l8', { scaleX: 0, transformOrigin: '50% 50%' }, { scaleX: 1, duration: 1.1, ease: 'power3.inOut' }, T[7] + 0.1);
+tl.fromTo('#biglogo', { scale: 0.2, opacity: 0, rotate: -180 }, { scale: 1, opacity: 1, rotate: 0, duration: 1.3, ease: 'expo.out' }, T[7] + 0.2);
+tl.fromTo('#bigc', { strokeDashoffset: 290 }, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.out' }, T[7] + 0.25);
+tl.fromTo('#biglogo span', { scale: 1.6, opacity: 0, filter: 'blur(14px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power3.out' }, T[7] + 0.55);
+words('#s8 .t8', T[7] + 1.2, 0.18, 0.9);
+tl.fromTo('#s8 .cam', { scale: 1 }, { scale: 1.04, duration: TOTAL - T[7], ease: 'none' }, T[7] - 0.5);
+tl.to('#stage', { opacity: 1, duration: 0.01 }, TOTAL - 0.01); // pin total length
+
+const fills = $$('.hdr .line i');
+window.TOTAL = TOTAL;
+window.seek = t => {
+  tl.seek(t, false);
+  const p = Math.min(1, t / TOTAL) * 100;
+  fills.forEach(f => f.style.width = p + '%');
+};
+window.seek(0);
+</script>
+</body>
+</html>
