@@ -10,11 +10,11 @@ const mode = process.argv[2]; // "stills" or "video"
   await page.goto('file://' + path.resolve('reel.html'));
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(500);
-  const TOTAL = await page.evaluate(() => window.TOTAL);
+  const TOTAL = await page.evaluate(() => window.OUT_TOTAL);
   if (mode === 'stills') {
     const ts = process.argv.slice(3).map(Number);
     for (const t of ts) {
-      await page.evaluate(t => window.seek(t), t);
+      await page.evaluate(t => window.seek(window.animTime(t)), t);
       await page.screenshot({ path: `stills/t${t}.png` });
     }
   } else {
@@ -22,7 +22,7 @@ const mode = process.argv[2]; // "stills" or "video"
     const ff = spawn('ffmpeg', ['-y', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'png', '-i', '-',
       '-c:v', 'libx264', '-preset', 'slow', '-crf', '15', '-pix_fmt', 'yuv420p', '-r', String(fps), 'video_noaudio.mp4'], { stdio: ['pipe', 'ignore', 'inherit'] });
     for (let i = 0; i < n; i++) {
-      await page.evaluate(t => window.seek(t), i / fps);
+      await page.evaluate(t => window.seek(window.animTime(t)), i / fps);
       const buf = await page.screenshot({ type: 'png' });
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
       if (i % 150 === 0) console.log('frame', i, '/', n);
