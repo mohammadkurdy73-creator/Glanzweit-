@@ -38,11 +38,11 @@
   .light .hdr .line i{background:var(--blue)}
 
   .logo{position:relative;width:118px;height:118px;flex:none;border-radius:50%;display:grid;place-items:center}
-  .logo svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
-  .logo circle{fill:none;stroke-width:4.5;stroke-linecap:round}
-  .logo span{font-family:'Ma Shan Zheng',serif;font-size:76px;line-height:1;margin-top:4px}
-  .dark .logo circle{stroke:#fff}.dark .logo span{color:#fff}
-  .light .logo{background:#fff}.light .logo circle{stroke:var(--ink)}.light .logo span{color:var(--ink)}
+  .logo i{position:absolute;inset:0;background:currentColor;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+  .logo .lring{-webkit-mask-image:url(logo_ring.png);mask-image:url(logo_ring.png)}
+  .logo .lchar{-webkit-mask-image:url(logo_char.png);mask-image:url(logo_char.png)}
+  .dark .logo{color:#fff}
+  .light .logo{color:var(--ink);background:#fff}
 
   .content{position:absolute;top:350px;bottom:400px;left:110px;right:110px;display:flex;flex-direction:column;justify-content:center}
   .w{display:inline-block;will-change:transform,opacity,filter}
@@ -115,8 +115,6 @@
   .center{position:absolute;left:50%;top:50%}
   .bigrings .ring{border-color:rgba(120,160,255,.28)}
   .biglogo{width:300px;height:300px}
-  .biglogo circle{stroke-width:3.2!important}
-  .biglogo span{font-size:200px;margin-top:10px}
   .t8{position:absolute;left:0;right:0;top:1150px;text-align:center;font-size:118px;font-weight:700}
 </style>
 </head>
@@ -128,7 +126,7 @@
     <div class="ring" style="width:1300px;height:1300px;left:-760px;top:1160px"></div>
     <div class="ring" style="width:700px;height:700px;right:-300px;top:-260px"></div>
     <div class="dot" style="left:160px;top:430px"></div><div class="dot" style="left:920px;top:1450px"></div><div class="dot" style="left:600px;top:1580px;width:14px;height:14px"></div>
-    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><i class="lring"></i><i class="lchar"></i></div></div>
     <div class="content">
       <div class="cal">
         <div class="pin" style="right:150px"></div><div class="pin" style="left:150px"></div>
@@ -152,7 +150,7 @@
   <section class="scene light" id="s2"><div class="out"><div class="cam">
     <div class="blob" style="width:520px;height:520px;left:-260px;top:-180px;opacity:.7"></div>
     <div class="ring" style="width:900px;height:900px;right:-520px;bottom:-200px"></div>
-    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><i class="lring"></i><i class="lchar"></i></div></div>
     <div class="content">
       <div class="t2a"><span class="split">في بعض الأشهر لم يكن دخلي يتجاوز</span><br>
         <span class="w nw"><span class="num" id="n1000">1,000</span></span> <span class="w nw">أو</span> <span class="w nw"><span class="num" id="n1500">1,500</span></span> <span class="w nw">درهم،</span></div>
@@ -170,7 +168,7 @@
   <section class="scene s3 dark" id="s3"><div class="out"><div class="cam">
     <div class="ring" style="width:1200px;height:1200px;left:-60px;top:240px;border-color:rgba(255,255,255,.06)"></div>
     <div class="dot" style="left:180px;top:420px;width:6px;height:6px"></div><div class="dot" style="left:820px;top:520px;width:5px;height:5px"></div><div class="dot" style="left:300px;top:640px;width:4px;height:4px"></div><div class="dot" style="left:950px;top:380px;width:7px;height:7px"></div>
-    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><i class="lring"></i><i class="lchar"></i></div></div>
     <div class="content" style="align-items:center">
       <svg class="mtn" viewBox="0 0 860 560">
         <defs>
@@ -204,7 +202,7 @@
   <section class="scene light" id="s4"><div class="out"><div class="cam">
     <div class="blob" id="s4blob" style="width:760px;height:760px;left:-420px;top:-200px"></div>
     <div class="ring" style="width:700px;height:700px;right:-380px;bottom:-140px"></div>
-    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><i class="lring"></i><i class="lchar"></i></div></div>
     <div class="content">
       <div class="t4 split">لكن الذي جعلني أستمر كان أمرين:</div>
       <div class="card b" id="c1">
@@ -222,7 +220,7 @@
   <section class="scene s5 dark" id="s5"><div class="out"><div class="cam">
     <div class="ring" style="width:1100px;height:1100px;left:-700px;top:-300px;border-color:rgba(255,255,255,.08)"></div>
     <div class="ring" style="width:800px;height:800px;right:-520px;bottom:120px;border-color:rgba(255,255,255,.08)"></div>
-    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><i class="lring"></i><i class="lchar"></i></div></div>
     <div class="content">
       <div class="row"><div class="sq"><svg viewBox="0 0 24 24" class="mega"><path d="m3 11 13-5v12L3 13z"/><path d="M8.5 14.5 9.5 19a1.5 1.5 0 0 0 2.9-.7l-.9-3.3"/><path class="wave" d="M19 9.5a3.5 3.5 0 0 1 0 5"/><path class="wave" d="M21.2 7.5a6.5 6.5 0 0 1 0 9"/></svg></div><p class="split">أطلقت حملات،</p><div class="div"></div></div>
       <div class="row"><div class="sq"><svg viewBox="0 0 24 24"><path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg></div><p class="split">وحاولت الوصول إلى عملاء جدد،</p><div class="div"></div></div>
@@ -235,7 +233,7 @@
   <section class="scene light" id="s6"><div class="out"><div class="cam">
     <div class="ring" style="width:900px;height:900px;left:-560px;bottom:-300px"></div>
     <div class="blob" style="width:380px;height:380px;right:-200px;top:520px;opacity:.6"></div>
-    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><i class="lring"></i><i class="lchar"></i></div></div>
     <div class="content">
       <div class="t6a"><div class="hg"><svg viewBox="0 0 24 24" id="hgl"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div><span class="split">لم تظهر النتيجة بسرعة.</span></div>
       <svg class="bars" viewBox="0 0 860 440" id="bars">
@@ -258,7 +256,7 @@
   <section class="scene s7 dark" id="s7"><div class="out"><div class="cam">
     <div class="ring" style="width:900px;height:900px;left:-560px;top:-200px"></div>
     <div class="ring" style="width:600px;height:600px;right:-340px;bottom:300px;border-color:rgba(255,255,255,.1)"></div>
-    <div class="hdr"><div class="line"><i></i></div><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke-dasharray="250 26"/></svg><span>永</span></div></div>
+    <div class="hdr"><div class="line"><i></i></div><div class="logo"><i class="lring"></i><i class="lchar"></i></div></div>
     <div class="content">
       <svg class="sprout" viewBox="0 0 860 470">
         <rect id="soil" x="0" y="230" width="860" height="200" rx="34" fill="#0b1f66" stroke="#5b8fe8" stroke-opacity=".5" stroke-width="3"/>
@@ -293,7 +291,7 @@
     </div>
     <div class="hdr" style="justify-content:center"><div class="line" style="flex:none;width:860px" id="l8"></div></div>
     <div class="center" style="margin-top:-120px"><div class="logo biglogo" id="biglogo" style="left:-150px;top:-150px;position:absolute">
-      <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" id="bigc" stroke-dasharray="260 29"/></svg><span>永</span>
+      <i class="lring"></i><i class="lchar"></i>
     </div></div>
     <div class="t8 split">وبس هيك... سلام</div>
   </div></div></section>
@@ -320,19 +318,38 @@ $$('.split').forEach(el => {
   });
 });
 
+const SFX = [];
+const sfx = (type, at, o = {}) => SFX.push({ type, at, ...o });
 const T = [0, 5.6, 12.8, 16.9, 23.4, 29.6, 36.3, 42.9];
 const TOTAL = 47.6;
 const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
 const words = (sel, at, stag = 0.07, d = 0.75) =>
   tl.fromTo($$(sel + ' .w'), { y: 46, opacity: 0, filter: 'blur(12px)' },
-    { y: 0, opacity: 1, filter: 'blur(0px)', duration: d, stagger: stag }, at);
+    { y: 0, opacity: 1, filter: 'blur(0px)', duration: d, stagger: stag }, at)
+  && $$(sel + ' .w').forEach((w, i) => sfx('tick', at + i * stag + 0.04, { i }));
 const header = (sc, at) => {
   tl.fromTo($(`#${sc} .hdr .line`), { scaleX: 0 }, { scaleX: 1, duration: 1, ease: 'power2.inOut' }, at);
-  tl.fromTo($(`#${sc} .hdr .logo`), { scale: 0, rotate: -120 }, { scale: 1, rotate: 0, duration: 0.9, ease: 'back.out(1.8)' }, at + 0.1);
-  tl.fromTo($(`#${sc} .hdr .logo circle`), { strokeDashoffset: 276 }, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.out' }, at + 0.15);
+  tl.fromTo($(`#${sc} .hdr .logo`), { scale: 0, rotate: -30 }, { scale: 1, rotate: 0, duration: 0.9, ease: 'back.out(1.8)' }, at + 0.1);
+  drawRing($(`#${sc} .hdr .lring`), at + 0.15, 1.1);
+  sfx('line', at, { d: 1 }); sfx('logo', at + 0.12);
+};
+// draw the brush ring on clockwise with a growing pie-shaped clip
+const pie = a => {
+  if (a >= 360) return 'none';
+  const pts = ['50% 50%'];
+  for (let k = 0; k <= 24; k++) {
+    const th = (150 + a * k / 24) * Math.PI / 180;
+    pts.push(`${50 + 75 * Math.sin(th)}% ${50 - 75 * Math.cos(th)}%`);
+  }
+  return `polygon(${pts.join(',')})`;
+};
+const drawRing = (el, at, d) => {
+  const o = { a: 0 };
+  tl.fromTo(o, { a: 0 }, { a: 360, duration: d, ease: 'power2.out', onUpdate: () => el.style.clipPath = pie(o.a) }, at);
 };
 const counter = (el, to, at, d) => {
   const o = { v: 0 };
+  sfx('count', at, { d });
   tl.to(o, { v: to, duration: d, ease: 'power2.out', onUpdate: () => el.textContent = Math.round(o.v).toLocaleString('en-US') }, at);
 };
 const life = (sc, from, to) => {
@@ -361,6 +378,7 @@ scenes.forEach((s, i) => {
   if (kind === 1) { from = 'circle(0% at 87% 14%)'; to = 'circle(150% at 87% 14%)'; }
   else if (kind === 2) { from = 'inset(100% 0% 0% 0%)'; to = 'inset(0% 0% 0% 0%)'; }
   else { from = 'inset(0% 0% 0% 100%)'; to = 'inset(0% 0% 0% 0%)'; }
+  sfx('swish', at, { k: i });
   tl.fromTo(panel, { clipPath: from }, { clipPath: to, duration: 0.75, ease: 'power3.inOut' }, at);
   tl.fromTo(s, { clipPath: from }, { clipPath: to, duration: 0.75, ease: 'power3.inOut' }, at + 0.14);
   tl.to($('.out', prev), { scale: 0.92, opacity: 0.5, duration: 0.8, ease: 'power2.in' }, at - 0.05);
@@ -488,12 +506,35 @@ words('#box7', T[6] + 2.8, 0.075, 0.6);
 tl.fromTo('#s8 .r8', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.6, stagger: 0.12, ease: 'expo.out' }, T[7] - 0.2);
 $$('#s8 .r8').forEach((r, i) => tl.to(r, { scale: 1.06, duration: 1.2, yoyo: true, repeat: 2, ease: 'sine.inOut' }, T[7] + 1.4 + i * 0.15));
 tl.fromTo('#l8', { scaleX: 0, transformOrigin: '50% 50%' }, { scaleX: 1, duration: 1.1, ease: 'power3.inOut' }, T[7] + 0.1);
-tl.fromTo('#biglogo', { scale: 0.2, opacity: 0, rotate: -180 }, { scale: 1, opacity: 1, rotate: 0, duration: 1.3, ease: 'expo.out' }, T[7] + 0.2);
-tl.fromTo('#bigc', { strokeDashoffset: 290 }, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.out' }, T[7] + 0.25);
-tl.fromTo('#biglogo span', { scale: 1.6, opacity: 0, filter: 'blur(14px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power3.out' }, T[7] + 0.55);
+tl.fromTo('#biglogo', { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.3, ease: 'expo.out' }, T[7] + 0.2);
+drawRing($('#biglogo .lring'), T[7] + 0.25, 1.6);
+tl.fromTo('#biglogo .lchar', { scale: 1.6, opacity: 0, filter: 'blur(14px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power3.out' }, T[7] + 0.55);
 words('#s8 .t8', T[7] + 1.2, 0.18, 0.9);
 tl.fromTo('#s8 .cam', { scale: 1 }, { scale: 1.04, duration: TOTAL - T[7], ease: 'none' }, T[7] - 0.5);
 tl.to('#stage', { opacity: 1, duration: 0.01 }, TOTAL - 0.01); // pin total length
+
+// ---- per-element sound events ----
+const t1 = T[1], t2 = T[2], t3 = T[3], t4 = T[4], t5 = T[5], t6 = T[6], t7 = T[7];
+sfx('thump', 0.3); sfx('click', 0.85); sfx('click', 0.95); sfx('draw', 0.9, { d: 0.5 });
+for (let i = 0; i < 8; i++) { sfx('blip', 0.9 + i * 0.05, { i, g: 0.4 }); sfx('scratch', 1.35 + i * 0.16, { i }); sfx('scratch', 1.42 + i * 0.16, { i }); }
+sfx('swipe', 2.0); sfx('swipe', 2.15);
+for (let i = 0; i < 4; i++) sfx('tick', t1 + 0.94 + i * 0.12, { i });
+for (let i = 0; i < 4; i++) { sfx('pop', t1 + 2.0 + i * 0.32, { i }); sfx('blip', t1 + 5.2 + i * 0.08, { i, g: 0.5 }); }
+sfx('pop', t1 + 3.6, { i: 5, big: 1 }); sfx('ding', t1 + 4.95);
+sfx('rumble', t2 + 0.05); sfx('wind', t2 + 0.25, { d: 1.6 }); sfx('rain', t2 + 0.6, { d: 4.2 });
+sfx('steps', t2 + 0.6, { d: 3.2 }); sfx('flutter', t2 + 0.9, { d: 3.2 }); sfx('shake', t2 + 2.2);
+sfx('slide', t3 + 1.1); sfx('pop', t3 + 1.4, { i: 1 }); sfx('slide', t3 + 2.6); sfx('pop', t3 + 2.9, { i: 3 });
+for (let i = 0; i < 4; i++) { sfx('pop', t4 + 0.3 + i, { i }); if (i < 3) sfx('draw', t4 + 0.65 + i, { d: 0.8 }); sfx('blip', t4 + 4.6 + i * 0.12, { i, g: 0.5 }); }
+sfx('whirr', t4 + 3.3, { d: 3.2 });
+sfx('pop', t5 + 0.2, { i: 0 }); [0.6, 1.9, 3.2].forEach(d => sfx('flip', t5 + d)); sfx('draw', t5 + 0.7, { d: 1 });
+for (let i = 0; i < 8; i++) sfx('blip', t5 + 1.0 + i * 0.2, { i, g: 0.55, low: 1 });
+sfx('rise', t5 + 2.7, { d: 0.8 }); sfx('rise', t5 + 2.95, { d: 0.9, up: 1 }); sfx('ding', t5 + 3.5, { hi: 1 });
+for (let i = 0; i < 3; i++) sfx('sparkle', t5 + 3.6 + i * 0.12, { i });
+sfx('thump', t6 + 0.1); for (let i = 0; i < 5; i++) sfx('blip', t6 + 0.6 + i * 0.07, { i, g: 0.4 });
+sfx('grow', t6 + 0.6, { d: 1.5 }); sfx('rise', t6 + 1.0, { d: 0.9 }); sfx('pop', t6 + 1.6, { i: 2 }); sfx('pop', t6 + 1.75, { i: 4 });
+sfx('slide', t6 + 2.5);
+[0, 1, 2].forEach(i => sfx('pulse', t7 - 0.2 + i * 0.12, { i })); sfx('draw', t7 + 0.1, { d: 1.1 }); sfx('chime', t7 + 0.25);
+window.SFX = SFX;
 
 const fills = $$('.hdr .line i');
 const SPLIT = T[1], S1 = 1.4, S2 = 1.12;
